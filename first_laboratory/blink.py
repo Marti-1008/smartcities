@@ -19,7 +19,7 @@ while True:
     if index ==1 and new_time-new_time_before > 1.5e8:
         valeur_bouton= valeur_bouton+1
         new_time_before =new_time
-   
+        Break = Break + 10e8
    
     print(valeur_bouton)
     if valeur_bouton == 0 or valeur_bouton == 1:
