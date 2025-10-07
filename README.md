@@ -1,5 +1,5 @@
 # smartcities
-#Nichoir Connecté – Projet SmartCities
+# Nichoir Connecté – Projet SmartCities
 
 Ce dépôt contient les exercices préparatoires au Nichoir Connecté, le projet de troisième année dans le cadre du parcours SmartCities. Chaque répertoire correspond à un un laboratoire pratique ou à la réalisationfinal du projet. 
 
