@@ -6,17 +6,18 @@ Description du projet
 
 Le projet permet de :
 
--*Allumer et éteindre une lampe (LED) à une fréquence définie.
+- Allumer et éteindre une lampe (LED) à une fréquence définie.
 
--*Changer la fréquence de clignotement en appuyant sur un bouton.
+- Changer la fréquence de clignotement en appuyant sur un bouton.
 
--*Explorer les fonctionnalités de base du Pico 2W et de la programmation microcontrôleur.
+- Explorer les fonctionnalités de base du Pico 2W et de la programmation microcontrôleur.
 
 Fonctionnalités :
 
--*Contrôle du clignotement : la lampe change de fréquence à chaque pression du bouton.
+- Contrôle du clignotement : la lampe change de fréquence à chaque pression du bouton.
 
--*Interface simple : un seul bouton pour naviguer entre les différentes fréquences.
+- Interface simple : un seul bouton pour naviguer entre les différentes fréquences.
 
--*Expérimentation matérielle : mise en pratique de GPIO, temporisation et gestion des interruptions.
+- Expérimentation matérielle : mise en pratique de GPIO, temporisation et gestion des interruptions.
+
 
