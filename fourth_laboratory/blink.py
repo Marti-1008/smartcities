@@ -3,7 +3,7 @@ from machine import ADC
 import utime
 
 def red(led_value, noise_mean) :
-    color_red = int((noise_mean-13000)*4.87*10**-3-(-2*led_value)*2)
+    color_red = int((noise_mean-13000)*4.87*10**-3-(5*led_value)*2)
     if 255>color_red and color_red>0 :
         return color_red
     else : 
@@ -23,9 +23,6 @@ def blue (last_noise, led_value):
         return color_blue
     else :
         return int((last_noise-13000)*4.87*10**-3)
-
- 
-
 
 BPM_now = 0
 RGB = WS2812(20,1) # le 1 représente le nombre de LED qu'il y a en série
@@ -49,6 +46,7 @@ k = 0
 prise_de_mesure = True
 noise_mean= 0
 BPM=[]
+battement = False
 while True:
     led_value = led_value+1
     if led_value>10:
@@ -78,6 +76,7 @@ while True:
         last_time= new_time
         last_noise = noise_mean*0.95 # pics
         print(BPM_now)
+        battement = True
         
     if new_time-last_time_writte>6000 :
         last_time_writte=new_time
@@ -87,19 +86,19 @@ while True:
         else :
             bpm=0
 
-        #try:
-            #with open("bpm_log.txt", "a") as f: # la structure with ferme automatiquement
-                    #f.write(f"{utime.localtime()}: {bpm:.1f} BPM\n")
-                    #print("Valeur enregistrée dans bpm_log.txt")
-        #except Exception as e:
-                #print("Erreur d’écriture dans le fichier :", e) # e contient l'objet d'excetion
+        try:
+            with open("bpm_log.txt", "a") as f: # la structure with ferme automatiquement
+                    f.write(f"{utime.localtime()}: {bpm:.1f} BPM\n")
+                    print("Valeur enregistrée dans bpm_log.txt")
+        except Exception as e:
+                print("Erreur d’écriture dans le fichier :", e) # e contient l'objet d'excetion
             
         print("le BPM moyen est de ",bpm)
-    if new_time-last_time_led > 200:
+    if battement:
         color = red(led_value, noise_mean), green(BPM_now, led_value), blue(last_noise, led_value)
         RGB.pixels_fill(color)
         RGB.pixels_show()
-        last_time_led=new_time
+        battement = False
 
     
     
