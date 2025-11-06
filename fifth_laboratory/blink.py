@@ -2,7 +2,9 @@ from machine import Pin, PWM
 import machine
 from utime import sleep
 import utime
-
+import urequests
+import gc
+import json
 moteur = PWM(Pin(20))
 button = machine.Pin(16, machine.Pin.IN)
 moteur.freq(100)
@@ -22,11 +24,12 @@ import ntptime
 import sys
  
  
-ssid = 'electroProjectWifi'       # 🔁 Remplace par le nom de ton réseau Wi-Fi
-password = 'B1MesureEnv'  # 🔁 Remplace par ton mot de passe Wi-Fi
+ssid = 'plc-511'       # 🔁 Remplace par le nom de ton réseau Wi-Fi
+password = 'TOMHWVEGGSZQZHAT'  # 🔁 Remplace par ton mot de passe Wi-Fi
  
 wlan = network.WLAN(network.STA_IF)  
-wlan.active(True)                    
+wlan.active(True) 
+print(wlan.scan())                   
 wlan.connect(ssid, password)         
  
 # Attente de la connexion
@@ -47,54 +50,87 @@ else:
 initial_time = 17000
 final_time =4000 
 last_time = utime.ticks_ms()
+last_time_bottom=last_time
+affichage = last_time
+buttom_pressed=0
 
-time_utc = 0
-passage = True
-while passage:
-    try :
-        ntptime.settime()
-        passage = False 
-    except :
-        print("erreur")
+time_utc = ["Etc/GMT","Etc/GMT+0","Etc/GMT+1","Etc/GMT+10","Etc/GMT+11","Etc/GMT+12","Etc/GMT+2","Etc/GMT+3","Etc/GMT+4","Etc/GMT+5","Etc/GMT+6","Etc/GMT+7","Etc/GMT+8","Etc/GMT+9","Etc/GMT-0","Etc/GMT-1","Etc/GMT-10","Etc/GMT-11","Etc/GMT-12","Etc/GMT-13","Etc/GMT-14","Etc/GMT-2","Etc/GMT-3","Etc/GMT-4","Etc/GMT-5","Etc/GMT-6","Etc/GMT-7","Etc/GMT-8","Etc/GMT-9","Etc/GMT0","Etc/Greenwich","Etc/UCT","Etc/UTC","Etc/Universal","Etc/Zulu"]
+
+index = 0
+change =True
+heure_ref = 12
+i = 0
+pressed = False
+first = True
+heure = 0
+h = "pas ok"
 while True:
     try:
+  
         new_time = utime.ticks_ms()
-        if button.value()==1 and (new_time-last_time)>500:
-            last_time= new_time
-            time_utc = time_utc +1
-            print("passage")
+        if button.value()==1 :
+            
+            if new_time-boutom_pressed>1000:
+                index +=1
+                boutom_pressed=new_time
+                print(index)
+                print(time_utc[index])
+            if new_time-last_time_bottom>250:
+                last_time_bottom=new_time
+                if change:
+                    change = False
+                    heure_ref = 24
+                else :
+                    change = True
+                    heure_ref = 12
+                print("l'heure de ref est :",heure_ref)
 
-        heure = time.localtime()[3]
-        if (heure+time_utc)%12!=0:
-            heure = (heure+time_utc)%12            
-        print(heure)
-        
-        print(int((13000/12)*(time_utc+heure))+4000)
-        moteur.duty_u16(int((13000/60)*(heure+time_utc)+4000))
-        
+        else :
+            boutom_pressed=new_time
 
-        print("Local time before synchronization：%s" %str(time.localtime()))
-        
+        if (new_time-affichage)>5000:
+            affichage=new_time
+            print(time_utc[index])
+            print("l'heure de la référence",heure_ref)
+            print("la fréquence est de", freq)
+            print(heure)
+            print(h)
 
+        if (new_time-last_time)>6000 or first:
+            first = False
+            last_time=new_time
+            try :
+                print("######################################")
+                response =urequests.get(f'https://worldtimeapi.org/api/timezone/{time_utc[index]}')
+                
+                data =(response.json())
+                datetime_str = data['datetime']
+                gtm = data['timezone']
+                print("Le gtm renvoyé par l'api est : ",gtm)
+                heure  = int(datetime_str[11:13])   # 08
+                minute = int(datetime_str[14:16])   # 56
+                seconde = int(datetime_str[17:19])  # 28
+                
+                response.close()
+                gc.collect()
+                
+                print(heure)
+                 
+            except Exception as e:
+                gc.collect()
+                print("erreur")
+                print(e)
+        if change:
+            heure = heure%12
+            h = "ok"
+        
+        freq = int((13000/heure_ref)*(heure)+4000)
+        #print(freq)
+        moteur.duty_u16(freq)   
 
     except KeyboardInterrupt:
-        print("fin")
-        sys.exit()
-        
-    except Exception as e:
-        print("❌ Erreur NTP :", e)
-        print("erreur")
-        sleep(2)
+            print("fin")
+            sys.exit()
 
-# ou 
-
-#Try:
- #   while True:
-  #      print("Local time before synchronization：%s" %str(time.localtime()))
-   #     ntptime.settime()
-    #    print("Local time after synchronization：%s" %str(time.localtime()))
-      #  sleep(5)
-#except:
-#    print("erreur")
 
  
