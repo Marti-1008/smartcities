@@ -103,7 +103,7 @@ def lecture(prise_de_mesure, noise_list):
 
 
 #<----------------------------------->
-#Lecture of the sensor
+#Make the mean of the noise
 def moyenne(average_noise, noise_list, last_noise):
     for i in range(15):
         average_noise +=noise_list[i]
@@ -115,7 +115,7 @@ def moyenne(average_noise, noise_list, last_noise):
 
 
 #<----------------------------------->
-#Lecture of the sensor
+#Calcul the currently BPM 
 def BPM_function(average_noise, new_time, last_time, BPM):
     print("The average noise is : ",average_noise)
     BPM_now = BPM_math(new_time, last_time)#calculate the value of the BPM
@@ -129,7 +129,7 @@ def BPM_function(average_noise, new_time, last_time, BPM):
 
 
 #<----------------------------------->
-#Lecture of the sensor
+#Calcul the mean average of the BPM each minut
 def writting(last_time_writte, new_time, BPM):
     last_time_writte=new_time
     if len(BPM)!=0:
@@ -151,7 +151,7 @@ def writting(last_time_writte, new_time, BPM):
 
 
 #<----------------------------------->
-#Lecture of the sensor
+#Change the color of the LED RGB
 def LED(battement, led_value, average_noise, BPM_now, last_noise):
     color = red(led_value, average_noise), green(BPM_now, led_value), blue(last_noise, led_value)#Calculate a random value of RGB
     RGB.pixels_fill(color)
