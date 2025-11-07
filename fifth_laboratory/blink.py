@@ -93,8 +93,7 @@ while True:
             print(time_utc[index])
             print("l'heure de la référence",heure_ref)
             print("la fréquence est de", freq)
-            print(heure)
-            print(h)
+           
 
         if (new_time-last_time)>6000 or first:
             first = False
@@ -122,10 +121,10 @@ while True:
                 print(e)
         if change:
             heure = heure%12
-            h = "ok"
+            
         
         freq = int((13000/heure_ref)*(heure)+4000)
-        #print(freq)
+        
         moteur.duty_u16(freq)   
 
     except KeyboardInterrupt:
