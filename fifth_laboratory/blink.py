@@ -64,6 +64,8 @@ def Lecture_of_time(time_utc, index, new_time):
 #Function which adds one to the index 
 def Index(index,new_time, time_utc):
     index +=1
+    if index == len(time_utc):
+        index=0
     boutom_pressed=new_time#it is used to pressed the buttom one time
     print(f"Le fuseau horaire actuelle est le : {time_utc[index]}")
     return index, boutom_pressed
@@ -142,7 +144,7 @@ if wlan.isconnected():#Display the different data over the connexion
     next = True 
 else:
     print('Échec de connexion.')
-    next = True
+    next = False
 #<////////////////////////////////////> 
 
 
@@ -170,7 +172,7 @@ if next:
             new_time = utime.ticks_ms()
             if button.value()==1 :
                 #if the bottom was pressed one time or two time it changes differents parameters
-                
+                print("heure de ref",new_time-boutom_pressed)
                 if new_time-boutom_pressed>1000:#if the bottom was pressed two times it wil change the utc
                     index, boutom_pressed =Index(index,new_time, time_utc)
                     
