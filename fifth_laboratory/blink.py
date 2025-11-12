@@ -63,9 +63,10 @@ def Lecture_of_time(time_utc, index, new_time):
 #<----------------------------------->
 #Function which adds one to the index 
 def Index(index,new_time, time_utc):
-    index +=1
     if index == len(time_utc):
         index=0
+    index +=1
+    
     boutom_pressed=new_time#it is used to pressed the buttom one time
     print(f"Le fuseau horaire actuelle est le : {time_utc[index]}")
     return index, boutom_pressed
