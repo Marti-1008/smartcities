@@ -65,7 +65,8 @@ def Lecture_of_time(time_utc, index, new_time):
 def Index(index,new_time, time_utc):
     if index == len(time_utc):
         index=0
-    index +=1
+    else :
+        index +=1
     
     boutom_pressed=new_time#it is used to pressed the buttom one time
     print(f"Le fuseau horaire actuelle est le : {time_utc[index]}")
@@ -83,7 +84,7 @@ def Change_time(new_time, change, heure_ref):
     else :
         change = True
         heure_ref = 12
-        print("l'heure de ref est :",heure_ref)
+    print("l'heure de ref est :",heure_ref)
     return last_time_bottom, heure_ref, change  
 #<////////////////////////////////////>
 
